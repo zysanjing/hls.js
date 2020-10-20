@@ -295,8 +295,9 @@ async function testSeekBackToStart (url, config) {
 let sauceConnectProcess;
 async function sauceConnect (tunnelIdentifier) {
   return new Promise(function (resolve, reject) {
-    console.log(`Running sauce-connect-launcher. Tunnel id: ${tunnelIdentifier}`);
+    console.log(`Running sauce-connect-launcher. Connect as ${process.env.SAUCE_USERNAME}. Tunnel id: ${tunnelIdentifier}`);
     sauceConnectLauncher({
+      verbose: true,
       tunnelIdentifier
     }, function (err, sauceConnectProcess) {
       if (err) {
