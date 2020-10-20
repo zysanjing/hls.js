@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-const sauceConnectLauncher = require('sauce-connect-launcher');
+// const sauceConnectLauncher = require('sauce-connect-launcher');
 const webdriver = require('selenium-webdriver');
 const By = webdriver.By;
 const until = webdriver.until;
@@ -292,36 +292,36 @@ async function testSeekBackToStart (url, config) {
   expect(result, stringifyResult(result)).to.have.property('playing').which.is.true;
 }
 
-let sauceConnectProcess;
-async function sauceConnect (tunnelIdentifier) {
-  return new Promise(function (resolve, reject) {
-    console.log(`Running sauce-connect-launcher. Connect as ${process.env.SAUCE_USERNAME}. Tunnel id: ${tunnelIdentifier}`);
-    sauceConnectLauncher({
-      verbose: true,
-      tunnelIdentifier
-    }, function (err, sauceConnectProcess) {
-      if (err) {
-        console.error(err.message);
-        reject(err);
-        return;
-      }
-      console.log('Sauce Connect ready');
-      resolve(sauceConnectProcess);
-    });
-  });
-}
-
-async function sauceDisconnect () {
-  return new Promise(function (resolve) {
-    if (!sauceConnectProcess) {
-      resolve();
-    }
-    sauceConnectProcess.close(function () {
-      console.log('Closed Sauce Connect process');
-      resolve();
-    });
-  });
-}
+// let sauceConnectProcess;
+// async function sauceConnect (tunnelIdentifier) {
+//   return new Promise(function (resolve, reject) {
+//     console.log(`Running sauce-connect-launcher. Connect as ${process.env.SAUCE_USERNAME}. Tunnel id: ${tunnelIdentifier}`);
+//     sauceConnectLauncher({
+//       verbose: true,
+//       tunnelIdentifier
+//     }, function (err, sauceConnectProcess) {
+//       if (err) {
+//         console.error(err.message);
+//         reject(err);
+//         return;
+//       }
+//       console.log('Sauce Connect ready');
+//       resolve(sauceConnectProcess);
+//     });
+//   });
+// }
+//
+// async function sauceDisconnect () {
+//   return new Promise(function (resolve) {
+//     if (!sauceConnectProcess) {
+//       resolve();
+//     }
+//     sauceConnectProcess.close(function () {
+//       console.log('Closed Sauce Connect process');
+//       resolve();
+//     });
+//   });
+// }
 
 describe(`testing hls.js playback in the browser on "${browserDescription}"`, function () {
   before(async function () {
@@ -357,7 +357,7 @@ describe(`testing hls.js playback in the browser on "${browserDescription}"`, fu
       capabilities['tunnel-identifier'] = `local-${Date.now()}`;
     }
     if (useSauce) {
-      sauceConnectProcess = await sauceConnect(capabilities['tunnel-identifier']);
+      // sauceConnectProcess = await sauceConnect(capabilities['tunnel-identifier']);
       capabilities.username = process.env.SAUCE_USERNAME;
       capabilities.accessKey = process.env.SAUCE_ACCESS_KEY;
       capabilities.avoidProxy = true;
@@ -384,7 +384,7 @@ describe(`testing hls.js playback in the browser on "${browserDescription}"`, fu
         }
       });
     } catch (err) {
-      await sauceDisconnect();
+      // await sauceDisconnect();
       throw new Error(`failed setting up session: ${err}`);
     }
   });
@@ -444,9 +444,9 @@ describe(`testing hls.js playback in the browser on "${browserDescription}"`, fu
     console.log('Quitting browser...');
     await browser.quit();
     console.log('Browser quit.');
-    if (useSauce) {
-      await sauceDisconnect();
-    }
+    // if (useSauce) {
+    //   await sauceDisconnect();
+    // }
   });
 
   for (let name in streams) {
