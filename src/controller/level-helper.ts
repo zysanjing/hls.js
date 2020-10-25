@@ -298,5 +298,13 @@ export function getFragmentWithSN (level: Level, sn: number): Fragment | null {
     return null;
   }
   const levelDetails = level.details;
-  return levelDetails.fragments[sn - levelDetails.startSN];
+  let fragment: Fragment | undefined = levelDetails.fragments[sn - levelDetails.startSN];
+  if (fragment) {
+    return fragment;
+  }
+  fragment = levelDetails.fragmentHint;
+  if (fragment && fragment.sn === sn) {
+    return fragment;
+  }
+  return null;
 }

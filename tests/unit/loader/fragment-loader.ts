@@ -15,6 +15,7 @@ import type { HlsConfig } from '../../../src/config';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
+import LevelDetails from '../../../src/loader/level-details';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -44,6 +45,7 @@ describe('FragmentLoader tests', function () {
   const sandbox = sinon.createSandbox();
   let fragmentLoader: FragmentLoader;
   let frag;
+  let levelDetails;
   let response;
   let context;
   let stats;
@@ -52,6 +54,8 @@ describe('FragmentLoader tests', function () {
     fragmentLoader = new FragmentLoader(mergeConfig(hlsDefaultConfig, { loader: MockXhr }));
     frag = new Fragment(PlaylistLevelType.MAIN, '');
     frag.url = 'foo';
+    levelDetails = new LevelDetails('');
+    levelDetails.fragments.push(frag);
     response = {};
     context = {};
     stats = new LoadStats();
@@ -66,7 +70,7 @@ describe('FragmentLoader tests', function () {
     response = { data: new Uint8Array(4) };
     return new Promise((resolve, reject) => {
       const fragmentLoaderPrivates = fragmentLoader as any;
-      fragmentLoader.load(frag)
+      fragmentLoader.load(frag, levelDetails)
         .then(data => {
           expect(data).to.deep.equal({
             frag,
@@ -90,7 +94,7 @@ describe('FragmentLoader tests', function () {
   it('should reject with a LoadError if the fragment does not have a url', function () {
     return new Promise((resolve, reject) => {
       frag.url = null;
-      fragmentLoader.load(frag)
+      fragmentLoader.load(frag, levelDetails)
         .then(() => {
           reject(new Error('Fragment loader should not have resolved'));
         })
@@ -103,7 +107,7 @@ describe('FragmentLoader tests', function () {
   it('handles fragment load errors', function () {
     return new Promise((resolve, reject) => {
       const fragmentLoaderPrivates = fragmentLoader as any;
-      fragmentLoader.load(frag)
+      fragmentLoader.load(frag, levelDetails)
         .then(() => {
           reject(new Error('Fragment loader should not have resolved'));
         })
@@ -130,7 +134,7 @@ describe('FragmentLoader tests', function () {
     // let abortSpy;
     return new Promise((resolve, reject) => {
       const fragmentLoaderPrivates = fragmentLoader as any;
-      fragmentLoader.load(frag)
+      fragmentLoader.load(frag, levelDetails)
         .then(() => {
           reject(new Error('Fragment loader should not have resolved'));
         })

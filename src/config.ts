@@ -278,7 +278,7 @@ function timelineConfig (): TimelineControllerConfig {
   };
 }
 
-export function mergeConfig (defaultConfig: HlsConfig, userConfig: any): HlsConfig {
+export function mergeConfig (defaultConfig: HlsConfig, userConfig: Partial<HlsConfig>): HlsConfig {
   if ((userConfig.liveSyncDurationCount || userConfig.liveMaxLatencyDurationCount) && (userConfig.liveSyncDuration || userConfig.liveMaxLatencyDuration)) {
     throw new Error('Illegal hls.js config: don\'t mix up liveSyncDurationCount/liveMaxLatencyDurationCount and liveSyncDuration/liveMaxLatencyDuration');
   }
